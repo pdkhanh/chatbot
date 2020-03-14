@@ -1,6 +1,6 @@
 const APP_SECRET = 'f2f2d7de0f2ecd2835d52f0cf6df1775';
 const VALIDATION_TOKEN = 'TokenTuyChon';
-const PAGE_ACCESS_TOKEN = 'EAANjW5tGXRgBAAf8aRZCoGpZA0iHzi2jFx56UG2OcgdEZAHb0v1ZChZCS0FIrpOK7hDyBxjMyb3fpDP0ZAxxEkViBYzFEZCziBiTxVkCUGNe01957eLhT0nJnzNeuxHN6z0fAVWV94ygGFzrY3NdQttZCoXVZApQqj6M91te4fqMlBjwJJWAAZBlN9';
+const PAGE_ACCESS_TOKEN = 'EAANjW5tGXRgBAGX0noFaE0toNApZAAY7wEHvJIwZAPal8TCQ9RwBcUtLhrPz7rbxw1JSnnQgZAdFEzbmN24wmlVCfGyivC7dkZBCAWEaS5qklQlglPWu6scwrZBtEdiRka3QXk5PpB61MPT80MhfhXqCdnXsZAc3e3hk8SqolHWr9g2qhHjeZBk';
  
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -22,7 +22,6 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
     res.send(req.query['hub.challenge']);
   }
   res.send('Error, wrong validation token');
-  console.log("Error, wrong validation token123");
 });
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
