@@ -2,14 +2,11 @@ const APP_SECRET = 'f2f2d7de0f2ecd2835d52f0cf6df1775';
 const VALIDATION_TOKEN = 'TokenTuyChon';
 const PAGE_ACCESS_TOKEN = 'EAANjW5tGXRgBAFBzCdKU6v4DzvlJ9XsJ3EsJJ20YyR5jLZBDvutmY1tIZBDG7zkQuZCkmCUj0BlkURLEktyQ5rJXgPVFcvUqS4uzwtx5CW3mjAT5sENYz3ZCs6Q90bFVHgICuoAbAzy5mtyQQg6TkspgkN64N1ANpK6oznZBf3kZCbB55uU8UI';
  
-var http = require('http');
+var http = require('https');
 var bodyParser = require('body-parser');
 var express = require('express');
  
-var app = express();
-app.use(bodyParser.urlencoded({
-  extended: false
-}));
+app = express().use(bodyParser.json());
 var server = http.createServer(app);
 var request = require("request");
  
