@@ -22,6 +22,7 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
     res.send(req.query['hub.challenge']);
   }
   res.send('Error, wrong validation token');
+  console.log("Error, wrong validation token");
 });
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
@@ -34,6 +35,7 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
         if (message.message.text) {
           var text = message.message.text;
           sendMessage(senderId, "Hello!! I'm a bot. Your message: " + text);
+		  console.log(text);
         }
       }
     }
