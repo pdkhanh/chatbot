@@ -22,19 +22,15 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
 });
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
-	console.log('Yah got message');
-  var entries = req.body.entry;
-  console.log(req.body);
-  	console.log('Yah got message');
-  console.log(entries);
   for (var entry of entries) {
     var messaging = entry.messaging;
     for (var message of messaging) {
       var senderId = message.sender.id;
+	  var senderName = message.sender.name;
       if (message.message) {
         if (message.message.text) {
           var text = message.message.text;
-          sendMessage(senderId, "Hello!! I'm a bot. Your message: " + text);
+          sendMessage(senderId, "Hello " + senderName +"!! I'm a bot. Your message: " + text);
 		  console.log(text);
         }
       }
