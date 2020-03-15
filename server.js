@@ -9,6 +9,7 @@ var express = require('express');
 app = express().use(bodyParser.json());
 var server = http.createServer(app);
 var request = require("request");
+var a;
  
 app.get('/', (req, res) => {
   res.send("Home page. Server running okay.");
@@ -22,46 +23,54 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
 });
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
-	getCorona();
-  var entries = req.body.entry;
-  for (var entry of entries) {
-    var messaging = entry.messaging;
-    for (var message of messaging) {
-      var senderId = message.sender.id;
-	  var senderName = message.sender.last_name;
-      if (message.message) {
-        if (message.message.text) {
-          var text = message.message.text;
-          sendMessage(senderId, "Hello " + senderName +"!! I'm a bot. Your message: " + text);
-		  console.log(text);
-        }
-      }
-    }
-  }
-  res.status(200).send("OK");
+	var request = require('request');
+	request('https://code.junookyo.xyz/api/ncov-moh/data.json', function (error, response, body) {
+	  if (!error && response.statusCode == 200) {
+		var jsonBody = JSON.parse(body);
+		var returnBody;
+		returnBody = "Tình hình Corona\n"
+					+ "Thế giới: " + jsonBody.data.global.cases + " ca nhiễm\n"
+					+ "Trong đó tử vong: " + jsonBody.data.global.deaths
+					+ ", chết: " + jsonBody.data.global.recovered + "\n"
+					+ "--------------------------- \n"
+					+ "Việt Nam: " + jsonBody.data.vietnam.cases + " ca nhiễm\n"
+					+ "Trong đó tử vong: " + jsonBody.data.vietnam.deaths
+					+ ", chết: " + jsonBody.data.vietnam.recovered;
+		console.log(jsonBody.data);
+		res.status(200).send(returnBody);
+		
+		
+	var entries = req.body.entry;
+	  for (var entry of entries) {
+		var messaging = entry.messaging;
+		for (var message of messaging) {
+		  var senderId = message.sender.id;
+		  var senderName = message.sender.last_name;
+		  if (message.message) {
+			if (message.message.text) {
+			  var text = message.message.text;
+			  sendMessage(senderId, returnBody);
+			  console.log(text);
+			}
+		  }
+		}
+	  }		
+	  }
+	})
 });
 
 const https = require('https');
 
 function getCorona(){
-	http.get('http://code.junookyo.xyz/api/ncov-moh/data.json', (resp) => {
-	  let data = '';
-
-	  // A chunk of data has been recieved.
-	  resp.on('data', (chunk) => {
-		data += chunk;
-	  });
-
-	  // The whole response has been received. Print out the result.
-	  resp.on('end', () => {
-		console.log("data: " + JSON.parse(data).explanation);
-	  });
-
-	}).on("error", (err) => {
-	  console.log("Error: " + err.message);
-	});
+	var request = require('request');
+	request('https://code.junookyo.xyz/api/ncov-moh/data.json', function (error, response, body) {
+	  if (!error && response.statusCode == 200) {
+		//console.log(body)
+		return body;
+	  }
+	})
 }
- 
+
 // Đây là function dùng api của facebook để gửi tin nhắn
 function sendMessage(senderId, message) {
   request({
