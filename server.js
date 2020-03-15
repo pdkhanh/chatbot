@@ -46,9 +46,6 @@ const https = require('https');
 function getCorona(){
 	http.get('http://code.junookyo.xyz/api/ncov-moh/data.json', (resp) => {
 	  let data = '';
-	  var test = resp.body.entry;
-	  
-	  console.log("test: " + test);
 
 	  // A chunk of data has been recieved.
 	  resp.on('data', (chunk) => {
@@ -57,7 +54,7 @@ function getCorona(){
 
 	  // The whole response has been received. Print out the result.
 	  resp.on('end', () => {
-		console.log(JSON.parse(data).explanation);
+		console.log("data: " + JSON.parse(data).explanation);
 	  });
 
 	}).on("error", (err) => {
