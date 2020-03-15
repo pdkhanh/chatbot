@@ -23,6 +23,7 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
 });
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+
 	var request = require('request');
 	request('https://code.junookyo.xyz/api/ncov-moh/data.json', function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
@@ -39,22 +40,8 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 		console.log(jsonBody.data);
 		res.status(200).send(returnBody);
 		
-		
-	var entries = req.body.entry;
-	  for (var entry of entries) {
-		var messaging = entry.messaging;
-		for (var message of messaging) {
-		  var senderId = message.sender.id;
-		  var senderName = message.sender.last_name;
-		  if (message.message) {
-			if (message.message.text) {
-			  var text = message.message.text;
-			  sendMessage(senderId, returnBody);
-			  console.log(text);
-			}
-		  }
-		}
-	  }		
+		var senderId = req.body.entry[0].messaging[0].sender.id;
+		sendMessage(senderId, returnBody);
 	  }
 	})
 });
@@ -69,6 +56,10 @@ function getCorona(){
 		return body;
 	  }
 	})
+}
+
+function prepareMessage(){
+	
 }
 
 // Đây là function dùng api của facebook để gửi tin nhắn
