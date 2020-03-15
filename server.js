@@ -22,6 +22,7 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
 });
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+	getCorona();
   var entries = req.body.entry;
   for (var entry of entries) {
     var messaging = entry.messaging;
@@ -39,6 +40,30 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
   }
   res.status(200).send("OK");
 });
+
+const https = require('https');
+
+function getCorona(){
+	http.get('http://code.junookyo.xyz/api/ncov-moh/data.json', (resp) => {
+	  let data = '';
+	  var test = resp.body.entry;
+	  
+	  console.log("test: " + test);
+
+	  // A chunk of data has been recieved.
+	  resp.on('data', (chunk) => {
+		data += chunk;
+	  });
+
+	  // The whole response has been received. Print out the result.
+	  resp.on('end', () => {
+		console.log(JSON.parse(data).explanation);
+	  });
+
+	}).on("error", (err) => {
+	  console.log("Error: " + err.message);
+	});
+}
  
 // Đây là function dùng api của facebook để gửi tin nhắn
 function sendMessage(senderId, message) {
