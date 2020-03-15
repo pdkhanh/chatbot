@@ -61,7 +61,7 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 		return;
 	}
 	
-	function check() {
+	function check1() {
 		getCorona1().then(function(body){
 			if (oldValue != body){
 				console.log("old value: " + JSON.stringify(oldValue));
@@ -95,7 +95,7 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 			console.log(error);
 		})
 	}
-	interval = setInterval(() => check(), 10000);
+	//interval = setInterval(() => check1(), 10000);
 });
 
 
