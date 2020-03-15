@@ -62,6 +62,7 @@ function getCorona(){
 }
 
 function postFB(message){
+	
 	const id = '109954373962352';
 	const access_token = 'EAACEvKxJsRABAKKALBpNZAgCplnvKqe5ugr96jQlbFZA8M2b8niq3HSzQu7i9ViE4QB8F0xNT5w4If7pXXBeQn4kSOe1sSg4L3KCZBZA1OMlvT0o6w5ZAPrSiZBURhsZA37B2inltMLg1GnCB8A4BOIjEleJEOSMJiwfZCZCHihPwo5REoe0FTaZAp975Tb6rlfZC9aX3avcCehKAZDZD';
 
@@ -99,7 +100,14 @@ function sendMessage(senderId, message) {
         text: message
       },
     }
-  });
+  }, function (error, response, body) {
+	  if (!error && response.statusCode == 200) {
+		console.log(body)
+		return body;
+	  } else {
+		  console.log(body)
+	  }
+	});
 }
  
 app.set('port', process.env.PORT || 5000);
