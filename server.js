@@ -23,8 +23,7 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
 });
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
-	postFB();
-
+	try{
 	var request = require('request');
 	request('https://code.junookyo.xyz/api/ncov-moh/data.json', function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
@@ -44,7 +43,10 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 		var senderId = req.body.entry[0].messaging[0].sender.id;
 		sendMessage(senderId, returnBody);
 	  }
-	})
+	})}catch(ex){
+		console.log(ex);
+	}
+	
 });
 
 const https = require('https');
@@ -60,7 +62,6 @@ function getCorona(){
 }
 
 function postFB(message){
-	
 	const id = '109954373962352';
 	const access_token = 'EAACEvKxJsRABAKKALBpNZAgCplnvKqe5ugr96jQlbFZA8M2b8niq3HSzQu7i9ViE4QB8F0xNT5w4If7pXXBeQn4kSOe1sSg4L3KCZBZA1OMlvT0o6w5ZAPrSiZBURhsZA37B2inltMLg1GnCB8A4BOIjEleJEOSMJiwfZCZCHihPwo5REoe0FTaZAp975Tb6rlfZC9aX3avcCehKAZDZD';
 
@@ -84,7 +85,6 @@ function prepareMessage(){
 
 // Đây là function dùng api của facebook để gửi tin nhắn
 function sendMessage(senderId, message) {
-	console.log("lll");
   request({
     url: 'https://graph.facebook.com/v2.6/me/messages',
     qs: {
