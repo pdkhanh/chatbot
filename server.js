@@ -10,6 +10,7 @@ app = express().use(bodyParser.json());
 var server = http.createServer(app);
 var request = require("request");
 var a;
+var interval;
  
 app.get('/', (req, res) => {
   res.send("Home page. Server running okay.");
@@ -56,6 +57,7 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 	if(message == "end"){
 		sendMessage(ID, "OK end");
 		res.status(200).send("OK end");
+		clearInterval(interval);
 		return;
 	}
 	
@@ -64,6 +66,7 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 			if (oldValue != body){
 				console.log("old value: " + JSON.stringify(oldValue));
 				console.log("new value: " + JSON.stringify(body));
+				console.log("not equal");
 				oldValue = body;
 				
 				var jsonBody = JSON.parse(body);
@@ -76,11 +79,10 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 							+ "Việt Nam: " + jsonBody.data.vietnam.cases + " ca nhiễm\n"
 							+ "Trong đó tử vong: " + jsonBody.data.vietnam.deaths
 							+ ", hồi phục: " + jsonBody.data.vietnam.recovered;
-				console.log(jsonBody.data);
-				res.status(200).send(returnBody);
+				//console.log(jsonBody.data);
+				//res.status(200).send(returnBody);
 				
 				var senderId = req.body.entry[0].messaging[0].sender.id;
-				console.log(senderId)
 				sendMessage(senderId, returnBody)
 				
 			} else {
@@ -90,13 +92,13 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 			}
 			
 		}).catch(function(error){
-			//do something on error
+			console.log(error);
 		})
 	}
-	//setInterval(() => check(), 40000);
+	interval = setInterval(() => check(), 10000);
 });
 
-var interval;
+
 app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
 	var oldValue;
 	var ID = req.body.entry[0].messaging[0].sender.id;
