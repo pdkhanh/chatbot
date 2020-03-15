@@ -48,7 +48,7 @@ app.post('/webhook1', function(req, res) { // Phần sử lý tin nhắn của n
 });
 
 
-app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
 	var oldValue;
 	var ID = req.body.entry[0].messaging[0].sender.id;
 	var message = req.body.entry[0].messaging[0].message.text;
@@ -97,7 +97,7 @@ app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của n
 });
 
 var interval;
-app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
 	var oldValue;
 	var ID = req.body.entry[0].messaging[0].sender.id;
 	var message = req.body.entry[0].messaging[0].message.text;
