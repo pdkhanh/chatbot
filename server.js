@@ -137,7 +137,7 @@ app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của n
 			//do something on error
 		})
 	}
-	interval = setInterval(() => check(), 10000);
+	//interval = setInterval(() => check(), 10000);
 });
 
 
