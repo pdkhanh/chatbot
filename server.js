@@ -31,11 +31,11 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 		returnBody = "Tình hình Corona\n"
 					+ "Thế giới: " + jsonBody.data.global.cases + " ca nhiễm\n"
 					+ "Trong đó tử vong: " + jsonBody.data.global.deaths
-					+ ", chết: " + jsonBody.data.global.recovered + "\n"
+					+ ", hồi phục: " + jsonBody.data.global.recovered + "\n"
 					+ "--------------------------- \n"
 					+ "Việt Nam: " + jsonBody.data.vietnam.cases + " ca nhiễm\n"
 					+ "Trong đó tử vong: " + jsonBody.data.vietnam.deaths
-					+ ", chết: " + jsonBody.data.vietnam.recovered;
+					+ ", hồi phục: " + jsonBody.data.vietnam.recovered;
 		console.log(jsonBody.data);
 		res.status(200).send(returnBody);
 		
