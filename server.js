@@ -43,7 +43,6 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 		
 		var senderId = req.body.entry[0].messaging[0].sender.id;
 		sendMessage(senderId, returnBody);
-		let timerId = setInterval(() => sendMessage(senderId, returnBody), 5000);
 	  }
 	})
 });
