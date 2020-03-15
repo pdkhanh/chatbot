@@ -93,7 +93,7 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 			//do something on error
 		})
 	}
-	setInterval(() => check(), 40000);
+	//setInterval(() => check(), 40000);
 });
 
 var interval;
@@ -137,7 +137,6 @@ app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của n
 	}
 	interval = setInterval(() => check(), 10000);
 });
-
 
 
 const https = require('https');
