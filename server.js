@@ -1,6 +1,6 @@
 const APP_SECRET = 'f2f2d7de0f2ecd2835d52f0cf6df1775';
 const VALIDATION_TOKEN = 'TokenTuyChon';
-const PAGE_ACCESS_TOKEN = 'EAANjW5tGXRgBAGUFzyTSAgrp7ZACNxBXaUIQoqp8uRTGhtqyLtBxB6fwPd3q4fLGRN31CG1bxZCRLSfcgqXSQAnUVrP3cbeOrlxI4gFfDGn3jyTsQAu5VDRK1uJnqiZCCYQnYcMPespdhcJjl5ks9ewD3LYB7J2h1biFi7ZAbcu65MF4UQCmMWRGFbniiLvFIlFi2YZB2SAZDZD';
+const PAGE_ACCESS_TOKEN = 'EAANjW5tGXRgBAFBzCdKU6v4DzvlJ9XsJ3EsJJ20YyR5jLZBDvutmY1tIZBDG7zkQuZCkmCUj0BlkURLEktyQ5rJXgPVFcvUqS4uzwtx5CW3mjAT5sENYz3ZCs6Q90bFVHgICuoAbAzy5mtyQQg6TkspgkN64N1ANpK6oznZBf3kZCbB55uU8UI';
  
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -23,7 +23,6 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
 });
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
-	try{
 	var request = require('request');
 	request('https://code.junookyo.xyz/api/ncov-moh/data.json', function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
@@ -41,47 +40,23 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 		res.status(200).send(returnBody);
 		
 		var senderId = req.body.entry[0].messaging[0].sender.id;
+		console.log(senderId)
 		sendMessage(senderId, returnBody);
-	  }
-	})}catch(ex){
-		console.log(ex);
-	}
 	
+	  }
+	})
 });
 
 const https = require('https');
 
 function getCorona(){
 	var request = require('request');
-	request('https://graph.facebook.com/109954373962352/feed?message=test123&access_token=EAACEvKxJsRABABr3hwv4p9hH8d1VqncictuQwBx1FaMjZBaRBZCSlxRyWZBB0KjAwBig2nOD7DY2dKLczJZCWtjTJZBj5GOICZAlLes2kNz96HLDaAZCnXdBiIQZBaxO4NWO8V6T5cYv85tEupWSAhBLe1AOFZC8fo2M0NTue6PWj2b1QnvgUeH14bsaV1nhs0fZAKGmZAsdwtuvwZDZD', function (error, response, body) {
+	request('https://code.junookyo.xyz/api/ncov-moh/data.json', function (error, response, body) {
 	  if (!error && response.statusCode == 200) {
-		console.log(body)
+		//console.log(body)
 		return body;
 	  }
 	})
-}
-
-function postFB(message){
-	
-	const id = '109954373962352';
-	const access_token = 'EAACEvKxJsRABAKKALBpNZAgCplnvKqe5ugr96jQlbFZA8M2b8niq3HSzQu7i9ViE4QB8F0xNT5w4If7pXXBeQn4kSOe1sSg4L3KCZBZA1OMlvT0o6w5ZAPrSiZBURhsZA37B2inltMLg1GnCB8A4BOIjEleJEOSMJiwfZCZCHihPwo5REoe0FTaZAp975Tb6rlfZC9aX3avcCehKAZDZD';
-
-	const postTextOptions = {
-	  method: 'POST',
-	  uri: `https://graph.facebook.com/v2.8/${id}/feed`,
-	  qs: {
-		access_token: access_token,
-		message: message
-	  }
-	};
-	console.log("loop");
-	
-	request(postTextOptions);
-	
-}
-
-function prepareMessage(){
-	
 }
 
 // Đây là function dùng api của facebook để gửi tin nhắn
@@ -106,8 +81,7 @@ function sendMessage(senderId, message) {
 		return body;
 	  } else {
 		  console.log(body)
-	  }
-	});
+  }});
 }
  
 app.set('port', process.env.PORT || 5000);
