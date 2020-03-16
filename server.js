@@ -116,12 +116,11 @@ function execute(req, res) {
         clearInterval(interval);
         return;
     }
-    interval = setInterval(() => check(), 60000);
+    interval = setInterval((oldValue) => check(), 5000);
 }
 
 
-function check(req, res, oldValue) {
-
+function check(oldValue) {
     console.log("-------" + i++ + "---------")
     getCorona().then(function(body) {
         if (oldValue != body) {
@@ -140,13 +139,11 @@ function check(req, res, oldValue) {
                 "Việt Nam: " + jsonBody.data.vietnam.cases + " ca nhiễm\n" +
                 "Trong đó tử vong: " + jsonBody.data.vietnam.deaths +
                 ", hồi phục: " + jsonBody.data.vietnam.recovered;
-            //console.log(jsonBody.data);
-            //res.status(200).send(returnBody);
 
             if (listSender.length > 0) {
                 listSender.forEach(senderID => {
                     sendMessage(senderID, returnBody)
-                    console.log("Send to " + senderID + " with message " + returnBody)
+                    console.log("Send to " + senderID + " with message \n" + returnBody)
                 })
             }
 
