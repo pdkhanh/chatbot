@@ -105,6 +105,7 @@ app.post('/deleteSender', function(req, res) {
 });
 
 function execute(req, res) {
+	var oldValue;
     var ID = req.body.entry[0].messaging[0].sender.id;
     var message = req.body.entry[0].messaging[0].message.text;
 
@@ -119,8 +120,8 @@ function execute(req, res) {
 }
 
 
-function check(req, res) {
-    var oldValue;
+function check(req, res, oldValue) {
+
     console.log("-------" + i++ + "---------")
     getCorona().then(function(body) {
         if (oldValue != body) {
