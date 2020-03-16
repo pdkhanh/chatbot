@@ -11,7 +11,7 @@ var server = http.createServer(app);
 var request = require("request");
 var a;
 var interval;
-var listSender = ['3206875339325393', '100048391702041'];
+var listSender = ['3206875339325393', '4148785151801891'];
  
 app.get('/', (req, res) => {
   res.send("Home page. Server running okay.");
@@ -26,6 +26,7 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
  
 app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
 	console.log(req.body.entry[0].messaging[0].sender.id);
+	console.log(req.body.entry[0].messaging[0].message.text);
 });
 
 var i = 1
@@ -38,6 +39,7 @@ app.post('/webhook3', function(req, res) {
 	if(message == "end"){
 		sendMessage(ID, "OK end");
 		res.status(200).send("OK end");
+		console.log("OK end");
 		clearInterval(interval);
 		return;
 	}
