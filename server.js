@@ -1,7 +1,7 @@
 const APP_SECRET = 'f2f2d7de0f2ecd2835d52f0cf6df1775';
 const VALIDATION_TOKEN = 'TokenTuyChon';
-const PAGE_ACCESS_TOKEN = 'EAANjW5tGXRgBAFBzCdKU6v4DzvlJ9XsJ3EsJJ20YyR5jLZBDvutmY1tIZBDG7zkQuZCkmCUj0BlkURLEktyQ5rJXgPVFcvUqS4uzwtx5CW3mjAT5sENYz3ZCs6Q90bFVHgICuoAbAzy5mtyQQg6TkspgkN64N1ANpK6oznZBf3kZCbB55uU8UI';
- 
+const PAGE_ACCESS_TOKEN = 'EAANjW5tGXRgBAISyPQXwqRe7ZAhS4ajCsbOtXZAHucYkTRLZCuZB8YHm0xxS0Ra5ZBlnbwOf3gciy6c06ZAMVWRjhQyabhUEEsh6CjjVBveGpRnqBgdqejhix78I1nzlHgYtF9sQe4EZCJdZBgglrmfEaEgBW8xpHnZC7oszKH5Pio29MFPvT8Gk2';
+//const PAGE_ACCESS_TOKEN = 'EAANjW5tGXRgBALvRQc5HZAq6OdUWcuwklu8VJ6igZBLaHL9ZBctbapCVZCjelNahUkzJ1y90OkJma1JHyZBzTa69hCRVW7FCah0BN2w5YDxMLZB9UZBwL7DAsWIk295U6Vtan9JlhQjCIZCvKhQZBIIwTHApdz3L8DgI8Xf2CFCU4HQvCJlJHWqxkhgyvUgLIo3dX03IbwhEUWZCkrNlmHqSGS';
 var http = require('http');
 var bodyParser = require('body-parser');
 var express = require('express');
@@ -11,6 +11,7 @@ var server = http.createServer(app);
 var request = require("request");
 var a;
 var interval;
+var listSender = ['3206875339325393', '100048391702041'];
  
 app.get('/', (req, res) => {
   res.send("Home page. Server running okay.");
@@ -23,33 +24,13 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
   res.send('Error, wrong validation token');
 });
  
-app.post('/webhook1', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
-	var request = require('request');
-	request('https://code.junookyo.xyz/api/ncov-moh/data.json', function (error, response, body) {
-	  if (!error && response.statusCode == 200) {
-		var jsonBody = JSON.parse(body);
-		var returnBody;
-		returnBody = "Tình hình Corona\n"
-					+ "Thế giới: " + jsonBody.data.global.cases + " ca nhiễm\n"
-					+ "Trong đó tử vong: " + jsonBody.data.global.deaths
-					+ ", hồi phục: " + jsonBody.data.global.recovered + "\n"
-					+ "--------------------------- \n"
-					+ "Việt Nam: " + jsonBody.data.vietnam.cases + " ca nhiễm\n"
-					+ "Trong đó tử vong: " + jsonBody.data.vietnam.deaths
-					+ ", hồi phục: " + jsonBody.data.vietnam.recovered;
-		console.log(jsonBody.data);
-		res.status(200).send(returnBody);
-		
-		var senderId = req.body.entry[0].messaging[0].sender.id;
-		console.log(senderId)
-		
-		setInterval(() => sendMessage(senderId, returnBody), 20000);
-	  }
-	})
+app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+	console.log(req.body.entry[0].messaging[0].sender.id);
 });
 
 var i = 1
-app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+app.post('/webhook3', function(req, res) {
+	
 	var oldValue;
 	var ID = req.body.entry[0].messaging[0].sender.id;
 	var message = req.body.entry[0].messaging[0].message.text;
@@ -83,8 +64,12 @@ app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của n
 				//console.log(jsonBody.data);
 				//res.status(200).send(returnBody);
 				
-				var senderId = req.body.entry[0].messaging[0].sender.id;
-				sendMessage(senderId, returnBody)
+				if(listSender.length > 0){
+					listSender.forEach(senderID => {
+						sendMessage(senderID, returnBody) 
+						console.log("Send to " + senderID + " with message "  + returnBody)
+					})
+				}
 				
 			} else {
 				console.log("old value: " + JSON.stringify(oldValue));
@@ -96,9 +81,25 @@ app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của n
 			console.log(error);
 		})
 	}
-	interval = setInterval(() => check1(), 60000);
+	//check1();
+	interval = setInterval(() => check1(), 5000);
 });
 
+app.get('/checkSender', (req, res) => {
+	res.send(listSender);
+});
+
+app.post('/addSender', function(req, res) {
+	var id = req.body.senderid;
+	res.status(200).send("Added: " + id);
+	listSender.push(id)
+});
+
+app.post('/deleteSender', function(req, res) {
+	var id = req.body.senderid;
+	listSender = listSender.filter(item => item !== id)
+	res.status(200).send("Deleted: " + id);
+});
 
 app.post('/webhook4', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
 	var oldValue;
