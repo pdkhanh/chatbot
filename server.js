@@ -12,6 +12,7 @@ var request = require("request");
 const https = require('https');
 var interval;
 var listSender = ['3206875339325393', '4148785151801891'];
+var oldValue;
 
 app.get('/', (req, res) => {
     res.send("Home page. Server running okay.");
@@ -73,7 +74,6 @@ app.post('/webhook3', function(req, res) {
                         console.log("Send to " + senderID + " with message " + returnBody)
                     })
                 }
-
             } else {
                 console.log("old value: " + JSON.stringify(oldValue));
                 console.log("new value: " + JSON.stringify(body));
@@ -105,22 +105,21 @@ app.post('/deleteSender', function(req, res) {
 });
 
 function execute(req, res) {
-	var oldValue;
     var ID = req.body.entry[0].messaging[0].sender.id;
     var message = req.body.entry[0].messaging[0].message.text;
 
     if (message == "end") {
         sendMessage(ID, "OK end");
-        res.status(200).send("OK end");
+        //res.status(200).send("OK end");
         console.log("OK end");
         clearInterval(interval);
         return;
     }
-    interval = setInterval(() => check(oldValue), 5000);
+    interval = setInterval(() => check(), 60000);
 }
 
 
-function check(oldValue) {
+function check() {
     console.log("-------" + i++ + "---------")
     getCorona().then(function(body) {
         if (oldValue != body) {
