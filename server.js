@@ -48,8 +48,8 @@ app.post('/webhook1', function(req, res) { // Phần sử lý tin nhắn của n
 	})
 });
 
-
-app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+var i = 1
+app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
 	var oldValue;
 	var ID = req.body.entry[0].messaging[0].sender.id;
 	var message = req.body.entry[0].messaging[0].message.text;
@@ -62,6 +62,7 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 	}
 	
 	function check1() {
+		console.log("-------" + i++ + "---------")
 		getCorona1().then(function(body){
 			if (oldValue != body){
 				console.log("old value: " + JSON.stringify(oldValue));
@@ -95,11 +96,11 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
 			console.log(error);
 		})
 	}
-	//interval = setInterval(() => check1(), 10000);
+	interval = setInterval(() => check1(), 60000);
 });
 
 
-app.post('/webhook3', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+app.post('/webhook4', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
 	var oldValue;
 	var ID = req.body.entry[0].messaging[0].sender.id;
 	var message = req.body.entry[0].messaging[0].message.text;
@@ -154,18 +155,22 @@ function getCorona(){
 
 function getTime() {
     return new Promise(function (resolve, reject) {
+		try{
          request('http://worldtimeapi.org/api/timezone/America/Argentina/Salta', function(error, response, body) {
             if (error) reject(error);
             if (response.statusCode === 200) resolve(body);
-})
+		})}catch(ex){console.log(ex)}
 });
 }
 
 function getCorona1() {
     return new Promise(function (resolve, reject) {
+
          request('https://code.junookyo.xyz/api/ncov-moh/data.json', function(error, response, body) {
+			try{
             if (error) reject(error);
             if (response.statusCode === 200) resolve(body);
+			}catch(ex){console.log(ex)}
 })
 });
 }
