@@ -116,7 +116,9 @@ function execute(req, res) {
         return;
     }
     check();
+    callMainPage()
     interval = setInterval(() => check(), 60000);
+    var interval2 = setInterval(() => callMainPage(), 1800000);
 }
 
 
@@ -184,6 +186,19 @@ function getCorona() {
     });
 }
 
+function callMainPage() {
+    return new Promise(function(resolve, reject) {
+        request('https://mata123.herokuapp.com/', function(error, response, body) {
+            try {
+                if (error) reject(error);
+                console.log(body);
+                if (response.statusCode === 200) resolve(body);
+            } catch (ex) {
+                console.log(ex)
+            }
+        })
+    });
+}
 // Đây là function dùng api của facebook để gửi tin nhắn
 function sendMessage(senderId, message) {
     request({
