@@ -115,6 +115,7 @@ function execute(req, res) {
         clearInterval(interval);
         return;
     }
+    check();
     interval = setInterval(() => check(), 60000);
 }
 
