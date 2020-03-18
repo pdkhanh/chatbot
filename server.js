@@ -13,6 +13,8 @@ const https = require('https');
 var interval;
 var listSender = ['3206875339325393', '4148785151801891'];
 var oldValue;
+var oldData;
+var count = 0
 
 app.get('/', (req, res) => {
     res.send("Home page. Server running okay.");
@@ -32,7 +34,6 @@ app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của ng
     res.status(200).send("OK");
 });
 
-var i = 1
 app.post('/webhook3', function(req, res) {
     var oldValue;
     var ID = req.body.entry[0].messaging[0].sender.id;
@@ -46,8 +47,8 @@ app.post('/webhook3', function(req, res) {
         return;
     }
 
-    function check1() {
-        console.log("-------" + i++ + "---------")
+    function checkCountry() {
+        console.log("-------" + count++ + "---------")
         getCorona().then(function(body) {
             if (oldValue != body) {
                 console.log("old value: " + JSON.stringify(oldValue));
@@ -84,8 +85,8 @@ app.post('/webhook3', function(req, res) {
             console.log(error);
         })
     }
-    //check1();
-    interval = setInterval(() => check1(), 5000);
+    //checkCountry();
+    interval = setInterval(() => checkCountry(), 5000);
 });
 
 app.get('/checkSender', (req, res) => {
@@ -199,6 +200,144 @@ function callMainPage() {
         })
     });
 }
+
+function getCorona1() {
+    return new Promise(function(resolve, reject) {
+        request('https://coronavirus-19-api.herokuapp.com/countries', function(error, response, body) {
+            try {
+                if (error) reject(error);
+                if (response.statusCode === 200) resolve(body);
+            } catch (ex) {
+                console.log(ex)
+            }
+        })
+    });
+}
+
+app.get('/test1', function(req, res) {
+    var oldData = [{
+        "country": "China",
+        "cases": 80894,
+        "todayCases": 13,
+        "deaths": 3237,
+        "todayDeaths": 11,
+        "recovered": 69614,
+        "active": 8043,
+        "critical": 2622
+    }, {
+        "country": "Italy",
+        "cases": 31506,
+        "todayCases": 0,
+        "deaths": 2503,
+        "todayDeaths": 0,
+        "recovered": 2941,
+        "active": 26062,
+        "critical": 2060
+    }]
+    var newData = [{
+        "country": "China",
+        "cases": 80894,
+        "todayCases": 13,
+        "deaths": 3233,
+        "todayDeaths": 11,
+        "recovered": 69614,
+        "active": 8043,
+        "critical": 2622
+    }, {
+        "country": "Italy",
+        "cases": 31506,
+        "todayCases": 0,
+        "deaths": 2503,
+        "todayDeaths": 0,
+        "recovered": 2941,
+        "active": 26062,
+        "critical": 2060
+    }]
+    //console.log(obj1[1])
+    //console.log(obj2[1])
+	
+	    for (i = 0; i < newData.length; i++) {
+			var message = "";
+            if (JSON.stringify(oldData[i]) != JSON.stringify(newData[i])) {
+                console.log("Old data: " + JSON.stringify(oldData[i]));
+                console.log("New data: " + JSON.stringify(newData[i]));
+				var oldObject = JSON.parse(JSON.stringify(oldData[i]));
+				var newObject = JSON.parse(JSON.stringify(newData[i]));
+				Object.keys(oldObject).forEach(function(key) {
+					var textMessage = "";
+					var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
+					console.log(upperCase);
+					if(oldObject[key] != newObject[key]){
+						textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
+					}else {
+						textMessage += upperCase + ": " + oldObject[key] + "\n";
+					}
+					message += textMessage;
+				})
+				sendMessage(listSender[0], message);
+            }
+        }
+    //execute1(req, res);
+	console.log(message);
+	
+    res.status(200).send(message);
+});
+
+
+app.get('/test', function(req, res) {
+    execute1(req, res);
+    res.status(200).send("OK");
+});
+
+function execute1(req, res) {
+    checkCountry();
+    callMainPage()
+    interval = setInterval(() => checkCountry(), 30000);
+    var interval2 = setInterval(() => callMainPage(), 1800000);
+}
+
+function checkCountry() {
+    console.log("-------" + count++ + "---------")
+    getCorona1().then(function(body) {
+		var message = "<--- Corona status --->";
+		var isUpdated = false;
+        var newData = JSON.parse(body);
+        if (oldData == null) {
+            oldData = newData;
+            return;
+        }
+		
+		if (newData == null) {
+            return;
+        }
+	    for (i = 0; i < newData.length; i++) {
+			var message = "";
+            if (JSON.stringify(oldData[i]) != JSON.stringify(newData[i])) {
+                console.log("Old data: " + JSON.stringify(oldData[i]));
+                console.log("New data: " + JSON.stringify(newData[i]));
+				var oldObject = JSON.parse(JSON.stringify(oldData[i]));
+				var newObject = JSON.parse(JSON.stringify(newData[i]));
+				Object.keys(oldObject).forEach(function(key) {
+					var textMessage = "";
+					var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
+					console.log(upperCase);
+					if(oldObject[key] != newObject[key]){
+						textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
+					}else {
+						textMessage += upperCase + ": " + oldObject[key] + "\n";
+					}
+					message += textMessage;
+				})
+				sendMessage(listSender[0], message);
+            }
+        }
+		oldData = newData;
+    }).catch(function(error) {
+        console.log(error);
+    })
+}
+
+
 // Đây là function dùng api của facebook để gửi tin nhắn
 function sendMessage(senderId, message) {
     request({
