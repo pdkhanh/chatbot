@@ -308,7 +308,6 @@ function execute1(req, res) {
 function checkCountry() {
     console.log("-------" + count++ + "---------")
     getCorona1().then(function(body) {
-		var isUpdated = false;
         var newData = JSON.parse(body);
         if (oldData == null) {
             oldData = newData;
@@ -319,7 +318,7 @@ function checkCountry() {
             return;
         }
 	    for (i = 0; i < newData.length; i++) {
-			var message = "<--- Corona status --->";
+			var message = "<--- Corona status --->\n";
             if (JSON.stringify(oldData[i]) != JSON.stringify(newData[i])) {
                 console.log("Old data: " + JSON.stringify(oldData[i]));
                 console.log("New data: " + JSON.stringify(newData[i]));
@@ -328,7 +327,6 @@ function checkCountry() {
 				Object.keys(oldObject).forEach(function(key) {
 					var textMessage = "";
 					var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
-					console.log(upperCase);
 					if(oldObject[key] != newObject[key]){
 						textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
 					}else {
