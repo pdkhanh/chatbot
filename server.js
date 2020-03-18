@@ -336,6 +336,7 @@ function checkCountry() {
 						message += textMessage;
 					})
 					sendMessage(listSender[0], message);
+					break;
             }
 			}
         }
