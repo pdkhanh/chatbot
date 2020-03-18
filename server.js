@@ -237,7 +237,7 @@ app.get('/test1', function(req, res) {
     var newData = [{
         "country": "China",
         "cases": 80894,
-        "todayCases": 13,
+        "todayCases": 14,
         "deaths": 3237,
         "todayDeaths": 11,
         "recovered": 69614,
@@ -255,11 +255,10 @@ app.get('/test1', function(req, res) {
     }]
     //console.log(obj1[1])
     //console.log(obj2[1])
-	
+	var message = "Corona\n"
+	var isUpdated = false;
 	    for (i = 0; i < oldData.length; i++) {
 			for(j=0; j< newData.length; j++){
-				var message = "<--- Corona status --->\n";
-				console.log(oldData[i].country == newData[j].country);
 				if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
 					console.log("Old data: " + JSON.stringify(oldData[i]));
 					console.log("New data: " + JSON.stringify(newData[j]));
@@ -269,18 +268,22 @@ app.get('/test1', function(req, res) {
 						var textMessage = "";
 						var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
 						if(oldObject[key] != newObject[key]){
+							isUpdated = true;
 							textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
-							console.log(textMessage);
 						}else {
 							textMessage += upperCase + ": " + oldObject[key] + "\n";
 						}
 						message += textMessage;
 					})
-					sendMessage(listSender[0], message);
+					message += "----------\n";
 					break;
+
             }
 			}
         }
+					if(isUpdated){
+				sendMessage(listSender[0], message);
+			}
     //execute1(req, res);
 	console.log(message);
 	
@@ -320,7 +323,7 @@ function checkCountry() {
 		if (newData == null) {
             return;
         }
-		var isUpdated = false
+		var isUpdated = false;
 		var message = "<--- Corona status --->\n";
 	    for (i = 0; i < oldData.length; i++) {
 			for(j=0; j< newData.length; j++){
@@ -345,10 +348,11 @@ function checkCountry() {
 
             }
 			}
-			if(isUpdated){
-				sendMessage(listSender[0], message);
-			}
+
         }
+		if(isUpdated){
+			sendMessage(listSender[0], message);
+		}
 		oldData = newData;
     }).catch(function(error) {
         console.log(error);
