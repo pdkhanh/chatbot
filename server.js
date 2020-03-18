@@ -259,7 +259,7 @@ app.get('/test1', function(req, res) {
 	    for (i = 0; i < oldData.length; i++) {
 			for(j=0; j< newData.length; j++){
 				var message = "<--- Corona status --->\n";
-									console.log(oldData[i].country == newData[j].country);
+				console.log(oldData[i].country == newData[j].country);
 				if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
 					console.log("Old data: " + JSON.stringify(oldData[i]));
 					console.log("New data: " + JSON.stringify(newData[j]));
@@ -326,9 +326,9 @@ function checkCountry() {
 				var message = "<--- Corona status --->\n";
 				if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
 					console.log("Old data: " + JSON.stringify(oldData[i]));
-					console.log("New data: " + JSON.stringify(newData[i]));
+					console.log("New data: " + JSON.stringify(newData[j]));
 					var oldObject = JSON.parse(JSON.stringify(oldData[i]));
-					var newObject = JSON.parse(JSON.stringify(newData[i]));
+					var newObject = JSON.parse(JSON.stringify(newData[j]));
 					Object.keys(oldObject).forEach(function(key) {
 						var textMessage = "";
 						var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
