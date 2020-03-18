@@ -290,6 +290,15 @@ app.get('/test', function(req, res) {
 });
 
 function execute1(req, res) {
+	var ID = req.body.entry[0].messaging[0].sender.id;
+    var message = req.body.entry[0].messaging[0].message.text;
+
+    if (message == "end") {
+        sendMessage(ID, "OK end");
+        console.log("OK end");
+        clearInterval(interval);
+        return;
+    }
     checkCountry();
     callMainPage()
     interval = setInterval(() => checkCountry(), 30000);
@@ -299,7 +308,6 @@ function execute1(req, res) {
 function checkCountry() {
     console.log("-------" + count++ + "---------")
     getCorona1().then(function(body) {
-		var message = "<--- Corona status --->";
 		var isUpdated = false;
         var newData = JSON.parse(body);
         if (oldData == null) {
@@ -311,7 +319,7 @@ function checkCountry() {
             return;
         }
 	    for (i = 0; i < newData.length; i++) {
-			var message = "";
+			var message = "<--- Corona status --->";
             if (JSON.stringify(oldData[i]) != JSON.stringify(newData[i])) {
                 console.log("Old data: " + JSON.stringify(oldData[i]));
                 console.log("New data: " + JSON.stringify(newData[i]));
