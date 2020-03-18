@@ -317,25 +317,27 @@ function checkCountry() {
 		if (newData == null) {
             return;
         }
-	    for (i = 0; i < newData.length; i++) {
-			var message = "<--- Corona status --->\n";
-            if (JSON.stringify(oldData[i]) != JSON.stringify(newData[i])) {
-                console.log("Old data: " + JSON.stringify(oldData[i]));
-                console.log("New data: " + JSON.stringify(newData[i]));
-				var oldObject = JSON.parse(JSON.stringify(oldData[i]));
-				var newObject = JSON.parse(JSON.stringify(newData[i]));
-				Object.keys(oldObject).forEach(function(key) {
-					var textMessage = "";
-					var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
-					if(oldObject[key] != newObject[key]){
-						textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
-					}else {
-						textMessage += upperCase + ": " + oldObject[key] + "\n";
-					}
-					message += textMessage;
-				})
-				sendMessage(listSender[0], message);
+	    for (i = 0; i < oldData.length; i++) {
+			for(j=0; j< newData.length; j++){
+				var message = "<--- Corona status --->\n";
+				if (JSON.stringify(oldData[i]) != JSON.stringify(newData[i]) && oldData[i].country == newData[i].country) {
+					console.log("Old data: " + JSON.stringify(oldData[i]));
+					console.log("New data: " + JSON.stringify(newData[i]));
+					var oldObject = JSON.parse(JSON.stringify(oldData[i]));
+					var newObject = JSON.parse(JSON.stringify(newData[i]));
+					Object.keys(oldObject).forEach(function(key) {
+						var textMessage = "";
+						var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
+						if(oldObject[key] != newObject[key]){
+							textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
+						}else {
+							textMessage += upperCase + ": " + oldObject[key] + "\n";
+						}
+						message += textMessage;
+					})
+					sendMessage(listSender[0], message);
             }
+			}
         }
 		oldData = newData;
     }).catch(function(error) {
