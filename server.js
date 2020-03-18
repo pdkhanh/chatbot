@@ -342,12 +342,12 @@ function checkCountry() {
 					})
 					message += "----------\n";
 					break;
+
+            }
+			}
 			if(isUpdated){
 				sendMessage(listSender[0], message);
 			}
-            }
-			}
-
         }
 		oldData = newData;
     }).catch(function(error) {
