@@ -321,9 +321,10 @@ function checkCountry() {
 		if (newData == null) {
             return;
         }
+		var message = "<--- Corona status --->\n";
 	    for (i = 0; i < oldData.length; i++) {
 			for(j=0; j< newData.length; j++){
-				var message = "<--- Corona status --->\n";
+				
 				if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
 					console.log("Old data: " + JSON.stringify(oldData[i]));
 					console.log("New data: " + JSON.stringify(newData[j]));
@@ -339,11 +340,12 @@ function checkCountry() {
 						}
 						message += textMessage;
 					})
-					sendMessage(listSender[0], message);
+					message += "----------\n";
 					break;
             }
 			}
         }
+		sendMessage(listSender[0], message);
 		oldData = newData;
     }).catch(function(error) {
         console.log(error);
@@ -372,6 +374,7 @@ function sendMessage(senderId, message) {
             console.log(body)
             return body;
         } else {
+			sendMessage(senderId, "sending with error" + body)
             console.log(body)
         }
     });
