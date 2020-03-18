@@ -27,7 +27,7 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
     res.send('Error, wrong validation token');
 });
 
-app.post('/webhook', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
+app.post('/webhook69', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
     console.log(req.body.entry[0].messaging[0].sender.id);
     console.log(req.body.entry[0].messaging[0].message.text);
     execute(req, res);
@@ -284,7 +284,7 @@ app.get('/test1', function(req, res) {
 });
 
 
-app.get('/test', function(req, res) {
+app.post('/webhook', function(req, res) {
     execute1(req, res);
     res.status(200).send("OK");
 });
