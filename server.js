@@ -317,15 +317,15 @@ function checkCountry() {
             oldData = newData;
             return;
         }
-		
 		if (newData == null) {
             return;
         }
 		var message = "<--- Corona status --->\n";
 	    for (i = 0; i < oldData.length; i++) {
+			var isUpdated = false
 			for(j=0; j< newData.length; j++){
-				
 				if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
+					isUpdated = true;
 					console.log("Old data: " + JSON.stringify(oldData[i]));
 					console.log("New data: " + JSON.stringify(newData[j]));
 					var oldObject = JSON.parse(JSON.stringify(oldData[i]));
@@ -345,7 +345,9 @@ function checkCountry() {
             }
 			}
         }
-		sendMessage(listSender[0], message);
+		if(isUpdated){
+			sendMessage(listSender[0], message);
+		}
 		oldData = newData;
     }).catch(function(error) {
         console.log(error);
