@@ -320,9 +320,9 @@ function checkCountry() {
 		if (newData == null) {
             return;
         }
+		var isUpdated = false
 		var message = "<--- Corona status --->\n";
 	    for (i = 0; i < oldData.length; i++) {
-			var isUpdated = false
 			for(j=0; j< newData.length; j++){
 				if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
 					console.log("Old data: " + JSON.stringify(oldData[i]));
