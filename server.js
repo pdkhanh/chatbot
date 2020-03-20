@@ -11,6 +11,7 @@ var server = http.createServer(app);
 var request = require("request");
 const https = require('https');
 var interval;
+var interval2;
 var listSender = ['3206875339325393', '4148785151801891'];
 var oldValue;
 var oldData;
@@ -44,6 +45,7 @@ app.post('/webhook3', function(req, res) {
         res.status(200).send("OK end");
         console.log("OK end");
         clearInterval(interval);
+		clearInterval(interval2);
         return;
     }
 
@@ -119,7 +121,7 @@ function execute(req, res) {
     check();
     callMainPage()
     interval = setInterval(() => check(), 60000);
-    var interval2 = setInterval(() => callMainPage(), 1800000);
+    interval2 = setInterval(() => callMainPage(), 1800000);
 }
 
 
@@ -218,7 +220,7 @@ app.get('/test1', function(req, res) {
     var oldData = [{
         "country": "China",
         "cases": 80894,
-        "todayCases": 13,
+        "todayCases": 12,
         "deaths": 3237,
         "todayDeaths": 11,
         "recovered": 69614,
@@ -228,7 +230,7 @@ app.get('/test1', function(req, res) {
         "country": "Italy",
         "cases": 31506,
         "todayCases": 0,
-        "deaths": 3237,
+        "deaths": 2503,
         "todayDeaths": 0,
         "recovered": 2941,
         "active": 26062,
@@ -237,7 +239,7 @@ app.get('/test1', function(req, res) {
     var newData = [{
         "country": "China",
         "cases": 80894,
-        "todayCases": 14,
+        "todayCases": 13,
         "deaths": 3237,
         "todayDeaths": 11,
         "recovered": 69614,
@@ -304,12 +306,13 @@ function execute1(req, res) {
         sendMessage(ID, "OK end");
         console.log("OK end");
         clearInterval(interval);
+		clearInterval(interval2);
         return;
     }
     checkCountry();
     callMainPage()
     interval = setInterval(() => checkCountry(), 30000);
-    var interval2 = setInterval(() => callMainPage(), 1800000);
+    interval2 = setInterval(() => callMainPage(), 1800000);
 }
 
 function checkCountry() {
