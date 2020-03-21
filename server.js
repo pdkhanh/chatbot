@@ -45,7 +45,7 @@ app.post('/webhook3', function(req, res) {
         res.status(200).send("OK end");
         console.log("OK end");
         clearInterval(interval);
-		clearInterval(interval2);
+        clearInterval(interval2);
         return;
     }
 
@@ -257,38 +257,38 @@ app.get('/test1', function(req, res) {
     }]
     //console.log(obj1[1])
     //console.log(obj2[1])
-	var message = "Corona\n"
-	var isUpdated = false;
-	    for (i = 0; i < oldData.length; i++) {
-			for(j=0; j< newData.length; j++){
-				if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
-					console.log("Old data: " + JSON.stringify(oldData[i]));
-					console.log("New data: " + JSON.stringify(newData[j]));
-					var oldObject = JSON.parse(JSON.stringify(oldData[i]));
-					var newObject = JSON.parse(JSON.stringify(newData[j]));
-					Object.keys(oldObject).forEach(function(key) {
-						var textMessage = "";
-						var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
-						if(oldObject[key] != newObject[key]){
-							isUpdated = true;
-							textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
-						}else {
-							textMessage += upperCase + ": " + oldObject[key] + "\n";
-						}
-						message += textMessage;
-					})
-					message += "----------\n";
-					break;
+    var message = "Corona\n"
+    var isUpdated = false;
+    for (i = 0; i < oldData.length; i++) {
+        for (j = 0; j < newData.length; j++) {
+            if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
+                console.log("Old data: " + JSON.stringify(oldData[i]));
+                console.log("New data: " + JSON.stringify(newData[j]));
+                var oldObject = JSON.parse(JSON.stringify(oldData[i]));
+                var newObject = JSON.parse(JSON.stringify(newData[j]));
+                Object.keys(oldObject).forEach(function(key) {
+                    var textMessage = "";
+                    var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
+                    if (oldObject[key] != newObject[key]) {
+                        isUpdated = true;
+                        textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
+                    } else {
+                        textMessage += upperCase + ": " + oldObject[key] + "\n";
+                    }
+                    message += textMessage;
+                })
+                message += "----------\n";
+                break;
 
             }
-			}
         }
-					if(isUpdated){
-				sendMessage(listSender[0], message);
-			}
+    }
+    if (isUpdated) {
+        sendMessage(listSender[0], message);
+    }
     //execute1(req, res);
-	console.log(message);
-	
+    console.log(message);
+
     res.status(200).send(message);
 });
 
@@ -299,14 +299,20 @@ app.post('/webhook', function(req, res) {
 });
 
 function execute1(req, res) {
-	var ID = req.body.entry[0].messaging[0].sender.id;
+    var ID = req.body.entry[0].messaging[0].sender.id;
     var message = req.body.entry[0].messaging[0].message.text;
 
     if (message == "end") {
         sendMessage(ID, "OK end");
         console.log("OK end");
         clearInterval(interval);
-		clearInterval(interval2);
+        clearInterval(interval2);
+        return;
+    }
+    if (message.includes('check')) {
+        var countryName = message.split(" ")[1];
+        console.log(countryName);
+        getSpecificCountry(countryName);
         return;
     }
     checkCountry();
@@ -323,45 +329,74 @@ function checkCountry() {
             oldData = newData;
             return;
         }
-		if (newData == null) {
+        if (newData == null) {
             return;
         }
-		var isUpdated = false;
-		var message = "<--- Corona status --->\n";
-	    for (i = 0; i < oldData.length; i++) {
-			for(j=0; j< newData.length; j++){
-				if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
-					console.log("Old data: " + JSON.stringify(oldData[i]));
-					console.log("New data: " + JSON.stringify(newData[j]));
-					var oldObject = JSON.parse(JSON.stringify(oldData[i]));
-					var newObject = JSON.parse(JSON.stringify(newData[j]));
-					Object.keys(oldObject).forEach(function(key) {
-						var textMessage = "";
-						var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
-						if(oldObject[key] != newObject[key]){
-							isUpdated = true;
-							textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
-						}else {
-							textMessage += upperCase + ": " + oldObject[key] + "\n";
-						}
-						message += textMessage;
-					})
-					message += "----------\n";
-					break;
+        var isUpdated = false;
+        var message = "<--- Corona status --->\n";
+        for (i = 0; i < oldData.length; i++) {
+            for (j = 0; j < newData.length; j++) {
+                if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
+                    console.log("Old data: " + JSON.stringify(oldData[i]));
+                    console.log("New data: " + JSON.stringify(newData[j]));
+                    var oldObject = JSON.parse(JSON.stringify(oldData[i]));
+                    var newObject = JSON.parse(JSON.stringify(newData[j]));
+                    Object.keys(oldObject).forEach(function(key) {
+                        var textMessage = "";
+                        var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
+                        if (oldObject[key] != newObject[key]) {
+                            isUpdated = true;
+                            textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
+                        } else {
+                            textMessage += upperCase + ": " + oldObject[key] + "\n";
+                        }
+                        message += textMessage;
+                    })
+                    message += "----------\n";
+                    break;
 
+                }
             }
-			}
 
         }
-		if(isUpdated){
-			sendMessage(listSender[0], message);
-		}
-		oldData = newData;
+        if (isUpdated) {
+            sendMessage(listSender[0], message);
+        }
+        oldData = newData;
     }).catch(function(error) {
         console.log(error);
     })
 }
 
+function getSpecificCountry(countryName) {
+    getCorona1().then(function(body) {
+        var isExisted = false;
+        var newData = JSON.parse(body);
+        var message = "<--- Corona status --->\n";
+        for (i = 0; i < newData.length; i++) {
+            if (newData[i].country == countryName) {
+                isExisted = true;
+                console.log("Country data: " + JSON.stringify(newData[i]));
+                var newObject = JSON.parse(JSON.stringify(newData[i]));
+                Object.keys(newObject).forEach(function(key) {
+                    var textMessage = "";
+                    var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
+                    message += upperCase + ": " + newObject[key] + "\n";
+                })
+                message += "----------\n";
+                break;
+            }
+
+        }
+        if (isExisted) {
+            sendMessage(listSender[0], message);
+        } else {
+            sendMessage(listSender[0], countryName + " not found");
+        }
+    }).catch(function(error) {
+        console.log(error);
+    })
+}
 
 // Đây là function dùng api của facebook để gửi tin nhắn
 function sendMessage(senderId, message) {
@@ -384,7 +419,7 @@ function sendMessage(senderId, message) {
             console.log(body)
             return body;
         } else {
-			sendMessage(senderId, "sending with error" + body)
+            sendMessage(senderId, "sending with error" + body)
             console.log(body)
         }
     });
