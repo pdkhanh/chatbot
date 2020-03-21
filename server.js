@@ -391,7 +391,7 @@ function getSpecificCountry(countryName) {
         if (isExisted) {
             sendMessage(listSender[0], message);
         } else {
-            sendMessage(listSender[0], countryName + " not found");
+            sendMessage(listSender[0], "Country " + countryName + " not found");
         }
     }).catch(function(error) {
         console.log(error);
