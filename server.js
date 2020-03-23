@@ -309,7 +309,7 @@ function execute1(req, res) {
         clearInterval(interval2);
         return;
     }
-    if (message.includes('check')) {
+    if (message.includes('check') || message.includes('Check')) {
         var countryName = message.split(" ")[1];
         console.log(countryName);
         getSpecificCountry(countryName);
