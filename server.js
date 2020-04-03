@@ -445,7 +445,7 @@ function sendMessage2(senderId, message) {
 			  "type":"image", 
 			  "payload":{
 				"is_reusable": false,	
-				"url": "http://localhost:5000/aa.jpg"
+				"url": "http://mata123.herokuapp.com/aa.jpg"
 			  }
 			}
 		  },
