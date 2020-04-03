@@ -10,6 +10,8 @@ app = express().use(bodyParser.json());
 var server = http.createServer(app);
 var request = require("request");
 const https = require('https');
+const fs = require('fs');
+const path = require('path');
 var interval;
 var interval2;
 var listSender = ['3206875339325393', '4148785151801891'];
@@ -31,7 +33,9 @@ app.get('/webhook', function(req, res) { // Đây là path để validate tooken
 app.post('/webhook69', function(req, res) { // Phần sử lý tin nhắn của người dùng gửi đến
     console.log(req.body.entry[0].messaging[0].sender.id);
     console.log(req.body.entry[0].messaging[0].message.text);
-    execute(req, res);
+    //execute(req, res);
+	sendMessage2(req.body.entry[0].messaging[0].sender.id, "a")
+	//readFiles("./");
     res.status(200).send("OK");
 });
 
@@ -425,8 +429,42 @@ function sendMessage(senderId, message) {
     });
 }
 
+function sendMessage2(senderId, message) {
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {
+            access_token: PAGE_ACCESS_TOKEN,
+        },
+        method: 'POST',
+        json: {
+            recipient: {
+                id: senderId
+            },
+            message:{
+			"attachment":{
+			  "type":"image", 
+			  "payload":{
+				"is_reusable": false,	
+				"url": "http://localhost:5000/aa.jpg"
+			  }
+			}
+		  },
+        }
+    }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body)
+            return body;
+        } else {
+            sendMessage(senderId, "sending with error" + body)
+            console.log(body)
+        }
+    });
+}
+
+
 app.set('port', process.env.PORT || 5000);
 app.set('ip', process.env.IP || "0.0.0.0");
+app.use(express.static('./public'));
 
 server.listen(app.get('port'), app.get('ip'), function() {
     console.log("Chat bot server listening at %s:%d ", app.get('ip'), app.get('port'));
