@@ -220,82 +220,6 @@ function getCorona1() {
     });
 }
 
-app.get('/test1', function(req, res) {
-    var oldData = [{
-        "country": "China",
-        "cases": 80894,
-        "todayCases": 12,
-        "deaths": 3237,
-        "todayDeaths": 11,
-        "recovered": 69614,
-        "active": 8043,
-        "critical": 2622
-    }, {
-        "country": "Italy",
-        "cases": 31506,
-        "todayCases": 0,
-        "deaths": 2503,
-        "todayDeaths": 0,
-        "recovered": 2941,
-        "active": 26062,
-        "critical": 2060
-    }]
-    var newData = [{
-        "country": "China",
-        "cases": 80894,
-        "todayCases": 13,
-        "deaths": 3237,
-        "todayDeaths": 11,
-        "recovered": 69614,
-        "active": 8043,
-        "critical": 2622
-    }, {
-        "country": "Italy",
-        "cases": 31506,
-        "todayCases": 0,
-        "deaths": 2503,
-        "todayDeaths": 0,
-        "recovered": 2941,
-        "active": 26062,
-        "critical": 2060
-    }]
-    //console.log(obj1[1])
-    //console.log(obj2[1])
-    var message = "Corona\n"
-    var isUpdated = false;
-    for (i = 0; i < oldData.length; i++) {
-        for (j = 0; j < newData.length; j++) {
-            if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
-                console.log("Old data: " + JSON.stringify(oldData[i]));
-                console.log("New data: " + JSON.stringify(newData[j]));
-                var oldObject = JSON.parse(JSON.stringify(oldData[i]));
-                var newObject = JSON.parse(JSON.stringify(newData[j]));
-                Object.keys(oldObject).forEach(function(key) {
-                    var textMessage = "";
-                    var upperCase = key.charAt(0).toUpperCase() + key.substring(1);
-                    if (oldObject[key] != newObject[key]) {
-                        isUpdated = true;
-                        textMessage += upperCase + ": " + oldObject[key] + " -> " + newObject[key] + "\n";
-                    } else {
-                        textMessage += upperCase + ": " + oldObject[key] + "\n";
-                    }
-                    message += textMessage;
-                })
-                message += "----------\n";
-                break;
-
-            }
-        }
-    }
-    if (isUpdated) {
-        sendMessage(listSender[0], message);
-    }
-    //execute1(req, res);
-    console.log(message);
-
-    res.status(200).send(message);
-});
-
 
 app.post('/webhook', function(req, res) {
     execute1(req, res);
@@ -306,7 +230,7 @@ function execute1(req, res) {
     var ID = req.body.entry[0].messaging[0].sender.id;
     var message = req.body.entry[0].messaging[0].message.text;
 
-    if (message == "end") {
+    if (message == "end" || message == "End") {
         sendMessage(ID, "OK end");
         console.log("OK end");
         clearInterval(interval);
@@ -319,9 +243,11 @@ function execute1(req, res) {
         getSpecificCountry(countryName);
         return;
     }
+	
+	sendMessage(ID, "Received your request, update realtime status");
     checkCountry();
     callMainPage()
-    interval = setInterval(() => checkCountry(), 30000);
+    interval = setInterval(() => checkCountry(), 60000);
     interval2 = setInterval(() => callMainPage(), 1800000);
 }
 
@@ -339,6 +265,10 @@ function checkCountry() {
         var isUpdated = false;
         var message = "<--- Corona status --->\n";
         for (i = 0; i < oldData.length; i++) {
+			if(oldData[i]['country'] == "Total:")
+			{
+				continue;
+			}
             for (j = 0; j < newData.length; j++) {
                 if ((JSON.stringify(oldData[i]) != JSON.stringify(newData[j])) && (oldData[i].country == newData[j].country)) {
                     console.log("Old data: " + JSON.stringify(oldData[i]));
