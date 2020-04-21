@@ -15,7 +15,7 @@ const path = require('path');
 var interval;
 var interval2;
 var listSender = ['3206875339325393', '4148785151801891'];
-var listIgnore = ['North America','Europe','Asia','South America','Oceania','Africa']
+var listIgnore = ['North America','Europe','Asia','South America','Oceania','Africa','Total:']
 var oldValue;
 var oldData;
 var count = 0
