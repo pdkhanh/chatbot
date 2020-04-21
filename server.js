@@ -15,6 +15,7 @@ const path = require('path');
 var interval;
 var interval2;
 var listSender = ['3206875339325393', '4148785151801891'];
+var listIgnore = ['North America','Europe','Asia','South America','Oceania','Africa']
 var oldValue;
 var oldData;
 var count = 0
@@ -265,7 +266,7 @@ function checkCountry() {
         var isUpdated = false;
         var message = "<--- Corona status --->\n";
         for (i = 0; i < oldData.length; i++) {
-			if(oldData[i]['country'] == "Total:")
+			if(listIgnore.includes(oldData[i]['country']))
 			{
 				continue;
 			}
@@ -353,7 +354,7 @@ function sendMessage(senderId, message) {
             console.log(body)
             return body;
         } else {
-            sendMessage(senderId, "sending with error" + body)
+            sendMessage(senderId, "Sending with error" + body)
             console.log(body)
         }
     });
@@ -386,6 +387,38 @@ function sendMessage2(senderId, message) {
             return body;
         } else {
             sendMessage(senderId, "sending with error" + body)
+            console.log(body)
+        }
+    });
+}
+
+function getUserName(senderId, message) {
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {
+            access_token: PAGE_ACCESS_TOKEN,
+        },
+        method: 'POST',
+        json: {
+            recipient: {
+                id: senderId
+            },
+            message:{
+			"attachment":{
+			  "type":"image", 
+			  "payload":{
+				"is_reusable": false,	
+				"url": "http://mata123.herokuapp.com/aa.jpg"
+			  }
+			}
+		  },
+        }
+    }, function(error, response, body) {
+        if (!error && response.statusCode == 200) {
+            console.log(body)
+            return body;
+            sendMessage(senderId, "sending with error" + body)
+        } else {
             console.log(body)
         }
     });
